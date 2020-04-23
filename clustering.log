@@ -1,0 +1,76 @@
+
+. use vgsales.dta, clear
+
+. describe
+
+Contains data from vgsales.dta
+  obs:        16,598                          
+ vars:            17                          23 Apr 2020 18:38
+ size:     3,784,344                          
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+rank            int     %8.0g                 Rank
+name            str132  %132s                 Name
+platform        str4    %9s                   Platform
+year            str4    %9s                   Year
+year_i          int     %10.0g                Year
+genre           str12   %12s                  Genre
+publisher       str38   %38s                  Publisher
+na_sales        float   %9.0g                 NA_Sales
+eu_sales        float   %9.0g                 EU_Sales
+jp_sales        float   %9.0g                 JP_Sales
+other_sales     float   %9.0g                 Other_Sales
+global_sales    float   %9.0g                 Global_Sales
+genre_i         long    %12.0g     genre_i    Genre
+pub_i           long    %38.0g     pub_i      Publisher
+plat_i          long    %8.0g      plat_i     Platform
+plat_gen        byte    %8.0g                 
+plat_type       byte    %8.0g                 
+-------------------------------------------------------------------------------
+Sorted by: plat_i
+
+. egen z_eu_sales = std(eu_sales)
+
+. egen z_jp_sales = std(jp_sales)
+
+. egen z_na_sales = std(na_sales)
+
+. egen z_other_sales = std(other_sales)
+
+. egen z_global_sales = std(global_sales)
+
+. egen z_year_i = std(year_i)
+(271 missing values generated)
+
+. egen z_rank= std(rank)
+
+. cluster singlelinkage z_eu_sales z_jp_sales z_na_sales z_other_sales z_global
+> _sales z_year_i z_rank, measure(L2) name(myclust)
+
+. cluster stop myclust,  rule(calinski) 
+
++---------------------------+
+|             |  Calinski/  |
+|  Number of  |  Harabasz   |
+|  clusters   |  pseudo-F   |
+|-------------+-------------|
+|      2      |   1675.65   |
+|      3      |   1278.33   |
+|      4      |    863.60   |
+|      5      |    893.61   |
+|      6      |    724.09   |
+|      7      |    606.39   |
+|      8      |    580.90   |
+|      9      |    891.66   |
+|     10      |    798.42   |
+|     11      |    721.39   |
+|     12      |    662.76   |
+|     13      |    624.43   |
+|     14      |    600.21   |
+|     15      |    558.89   |
++---------------------------+
+
+. 
+end of do-file

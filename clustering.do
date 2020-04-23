@@ -7,6 +7,6 @@ egen z_other_sales = std(other_sales)
 egen z_global_sales = std(global_sales)
 egen z_year_i = std(year_i)
 egen z_rank= std(rank)
-cluster wards z_eu_sales z_jp_sales z_na_sales z_other_sales z_global_sales z_year_i z_rank, measure(L2) name(myclust)
+cluster singlelinkage z_eu_sales z_jp_sales z_na_sales z_other_sales z_global_sales z_year_i z_rank, measure(L2) name(myclust)
 cluster stop myclust,  rule(calinski) 
 exit
