@@ -1,4 +1,5 @@
 
+. /* ssc install clustergram */
 . use vgsales.dta, clear
 
 . describe
@@ -44,33 +45,46 @@ Sorted by: plat_i
 . egen z_year_i = std(year_i)
 (271 missing values generated)
 
-. egen z_rank= std(rank)
+. egen z_rank = std(rank)
 
-. cluster singlelinkage z_eu_sales z_jp_sales z_na_sales z_other_sales z_global
-> _sales z_year_i z_rank, measure(L2) name(myclust)
+. cluster singlelinkage z_eu_sales z_jp_sales z_na_sales  z_year_i z_rank, meas
+> ure(L2) name(myclust)
 
-. cluster stop myclust,  rule(calinski) 
+. cluster stop myclust, rule(calinski) 
 
 +---------------------------+
 |             |  Calinski/  |
 |  Number of  |  Harabasz   |
 |  clusters   |  pseudo-F   |
 |-------------+-------------|
-|      2      |   1675.65   |
-|      3      |   1278.33   |
-|      4      |    863.60   |
-|      5      |    893.61   |
-|      6      |    724.09   |
-|      7      |    606.39   |
-|      8      |    580.90   |
-|      9      |    891.66   |
-|     10      |    798.42   |
-|     11      |    721.39   |
-|     12      |    662.76   |
-|     13      |    624.43   |
-|     14      |    600.21   |
-|     15      |    558.89   |
+|      2      |   1274.18   |
+|      3      |    763.97   |
+|      4      |    731.99   |
+|      5      |    650.90   |
+|      6      |    524.14   |
+|      7      |    733.57   |
+|      8      |    672.48   |
+|      9      |    605.73   |
+|     10      |    544.56   |
+|     11      |    493.28   |
+|     12      |    483.45   |
+|     13      |    466.48   |
+|     14      |    431.70   |
+|     15      |    401.96   |
 +---------------------------+
+
+. cluster kmeans z_eu_sales z_jp_sales z_na_sales  z_year_i z_rank, k(2) measur
+> e(L2) name(kclust)
+
+. cluster kmeans z_eu_sales z_jp_sales z_na_sales  z_year_i z_rank, k(4) measur
+> e(L2) name(kclust4)
+
+. twoway (scatter rank year_i if kclust==1, mcolor("green") ) (scatter rank yea
+> r_i if kclust==2, mcolor("red")),legend(off)
+
+. twoway (scatter rank year_i if kclust4==1, mcolor("green")) (scatter rank yea
+> r_i if kclust4==2, mcolor("red")) (scatter rank year_i if kclust4==3, mcolor(
+> "blue")) (scatter rank year_i if kclust4==4, mcolor("yellow")),legend(off)
 
 . 
 end of do-file
